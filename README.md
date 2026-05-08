@@ -18,13 +18,13 @@
 ### 方法一：一行命令安装
 
 ```bash
-git clone https://github.com/nice1st/ai-security-rules.git /tmp/ai-security-rules && bash /tmp/ai-security-rules/install.sh
+git clone https://github.com/macmini21/ai-security-rules.git /tmp/ai-security-rules && bash /tmp/ai-security-rules/install.sh
 ```
 
 ### 方法二：手动安装
 
 ```bash
-git clone https://github.com/nice1st/ai-security-rules.git
+git clone https://github.com/macmini21/ai-security-rules.git
 cd ai-security-rules
 bash install.sh
 ```

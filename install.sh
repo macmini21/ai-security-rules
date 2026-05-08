@@ -51,7 +51,7 @@ get_rules_dir() {
     # 如果是通过 curl 管道运行，下载到临时目录
     local tmp_dir
     tmp_dir="$(mktemp -d)"
-    local repo_url="https://github.com/nice1st/ai-security-rules"
+    local repo_url="https://github.com/macmini21/ai-security-rules"
     warn "未找到本地规范文件，正在从 GitHub 下载..."
     if command -v git &>/dev/null; then
         git clone --depth 1 "$repo_url" "$tmp_dir/repo" 2>/dev/null
