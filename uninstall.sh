@@ -17,8 +17,10 @@ detect_vscode_user_dir() {
         "$HOME/.config/Code - Insiders/User"
         "$HOME/Library/Application Support/Code/User"
         "$HOME/Library/Application Support/Code - Insiders/User"
-        "$APPDATA/Code/User"
     )
+    if [[ -n "${APPDATA:-}" ]]; then
+        candidates+=("${APPDATA}/Code/User")
+    fi
     for dir in "${candidates[@]}"; do
         if [[ -d "$dir" ]]; then
             printf '%s' "$dir"

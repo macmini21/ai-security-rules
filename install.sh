@@ -20,17 +20,33 @@ error() { printf "${RED}[✗]${NC} %s\n" "$1"; }
 # ---------- 定位 VS Code Server / Desktop 的 User 目录 ----------
 detect_vscode_user_dir() {
     local candidates=(
-        # VS Code Server (Remote SSH / WSL)
+        # VS Code Server (Remote SSH / WSL) - 多版本路径
         "$HOME/.vscode-server/data/User"
+    )
+
+    # 动态扫描 vscode-server bin 目录下的 User 数据
+    if [[ -d "$HOME/.vscode-server/bin" ]]; then
+        local bin_dir
+        for bin_dir in "$HOME/.vscode-server/bin"/*/; do
+            if [[ -d "${bin_dir}" ]]; then
+                candidates+=("${bin_dir%/}")
+            fi
+        done
+    fi
+
+    candidates+=(
         # VS Code Desktop (Linux)
         "$HOME/.config/Code/User"
         "$HOME/.config/Code - Insiders/User"
         # VS Code Desktop (macOS)
         "$HOME/Library/Application Support/Code/User"
         "$HOME/Library/Application Support/Code - Insiders/User"
-        # VS Code Desktop (Windows via Git Bash / MSYS)
-        "$APPDATA/Code/User"
     )
+
+    # Windows (only if APPDATA is set)
+    if [[ -n "${APPDATA:-}" ]]; then
+        candidates+=("${APPDATA}/Code/User")
+    fi
 
     for dir in "${candidates[@]}"; do
         if [[ -d "$dir" ]]; then
@@ -38,6 +54,14 @@ detect_vscode_user_dir() {
             return 0
         fi
     done
+
+    # 最后尝试：如果 vscode-server 目录存在但 data/User 不存在，自动创建
+    if [[ -d "$HOME/.vscode-server" ]]; then
+        mkdir -p "$HOME/.vscode-server/data/User"
+        printf '%s' "$HOME/.vscode-server/data/User"
+        return 0
+    fi
+
     return 1
 }
 
